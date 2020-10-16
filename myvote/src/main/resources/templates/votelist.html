@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<HTML>
+<HEAD>
+    <META content="IE=11.0000"
+          http-equiv="X-UA-Compatible">
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <TITLE>投票列表</TITLE>
+    <link type="text/css" rel="stylesheet" href="css/style.css">
+    <META name="GENERATOR" content="MSHTML 11.00.10586.420">
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="js/getUser.js"></script>
+    <script type="text/javascript">
+        window.loader = show(1);
+
+        function show(index) {
+            $("#vote").empty();
+            $.getJSON("http://localhost:8080/vote/getSub", {index: index}, function (data) {
+                $("#vote").append("<H2>投票列表</H2><DIV style='float: right;'></DIV><BR><UL class='list'></UL><DIV style='float: right;'></DIV>");
+                $(data.list).each(function (i, e) {
+                    $.getJSON("http://localhost:8080/vote/getItemByUid", {sid: e.sid}, function (num) {
+                        var liodd = i % 2 == 0 ? "odd" : "";
+                        var $li = "<LI class='"
+                            + liodd
+                            + "'><H4><A href='voteview.html?sid=" + e.sid + "'>"
+                            + e.title
+                            + "</A></H4><DIV class='join'><A href='vote.html?sid=" + e.sid + "'>我要参与</A></DIV><P class='info'>共有 "
+                            + e.listo.length
+                            + " 个选项，已有 " + num + " 个投票。</P></LI>";
+                        $("UL[class='list']").append($li);
+                    });
+                });
+                var $fenye = "<A href='javascript:show(1)'>首页</A> | <A href='javascript:show(" + (data.pageNum - 1) + ")'>上一页</A> | <A href='javascript:show(" + (data.pageNum + 1) + ")'>下一页</A> | <A href='javascript:show(" + data.pages + ")'>末页</A><A>[" + data.pageNum + "/" + data.pages + "]</A>";
+                $("#vote>div").append($fenye);
+            });
+        }
+
+        function weihu() {
+            $("DIV[class='join']").empty();
+            var $box = "<a href='' style='background: url(images/edit.gif) left center no-repeat;'>维护</a><a href='' style='background: none;display: inline-block;'>删除</a>";
+            $("DIV[class='join']").append($box);
+        }
+    </script>
+</HEAD>
+<BODY>
+<DIV class="wrap" id="header"><IMG src="images/logo.gif"></DIV>
+<DIV class="wrap" id="navbar">
+    <DIV class="profile">您好，<span id="username"></span> <SPAN
+            class="return"><A
+            href="votelist.html">返回列表</A></SPAN>
+        <SPAN class="addnew"><A href="add.html">添加新投票</A></SPAN>
+        <SPAN class="modify"><A href="votemodify.html">维护</A></SPAN>
+        <SPAN class="return"><A
+                href="http://localhost:8080/vote/del">注销</A></SPAN></DIV>
+    <DIV class="search">
+        <FORM action="findByName" method="post"><INPUT name="keywords" class="input-text" type="text"><INPUT
+                name="submit" class="input-button" type="submit" value=""/>
+        </FORM>
+    </DIV>
+</DIV>
+<DIV class="wrap" id="vote"></DIV>
+<DIV class="wrap" id="footer"> 北大青鸟 © 版权所有</DIV>
+</BODY>
+</HTML>

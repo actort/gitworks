@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cssl.mapper.SubjectMapper">
+
+    <resultMap id="selSubMap" type="Subject">
+        <id column="vs_id" property="sid"/>
+        <result column="vs_title" property="title"/>
+        <result column="vs_type" property="type"/>
+        <collection property="listo" select="com.cssl.mapper.OptionMapper.getOptionBySid"
+                    column="vs_id"/>
+    </resultMap>
+
+    <select id="fenye" resultMap="selSubMap" parameterType="Long">
+        SELECT *
+        FROM vote_subject
+    </select>
+
+    <select id="getSubBySid" resultMap="selSubMap">
+        SELECT *
+        FROM vote_subject
+        WHERE vs_id = #{sid}
+    </select>
+
+    <insert id="addSub" parameterType="Subject">
+        INSERT INTO vote_subject(vs_title, vs_type)
+        VALUES (#{title}, #{type});
+    </insert>
+
+    <delete id="delSubBySid" parameterType="Long">
+        DELETE
+        FROM vote_subject
+        WHERE vs_id = #{sid}
+    </delete>
+
+    <update id="updSubBySid" parameterType="Subject">
+        UPDATE vote_subject
+        SET vs_type = #{type}
+        WHERE vs_id = #{sid}
+    </update>
+
+    <select id="getAutoValue" resultType="Long">
+        SELECT AUTO_INCREMENT
+        FROM information_schema.TABLES
+        WHERE Table_Schema = 'myvote'
+          AND table_name = 'vote_subject'
+    </select>
+
+</mapper>

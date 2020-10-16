@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cssl.mapper.ItemMapper">
+
+    <resultMap id="selItemMap" type="Item">
+        <id column="vi_id" property="iid"/>
+        <result column="vu_user_id" property="uid"/>
+        <result column="vs_id" property="sid"/>
+        <result column="vo_id" property="oid"/>
+    </resultMap>
+
+    <select id="getItemBySidCount" resultType="int" parameterType="Long">
+        SELECT COUNT(1)
+        FROM vote_item
+        WHERE vs_id = #{sid}
+    </select>
+
+    <select id="getUserCountBySid" resultType="int" parameterType="Long">
+        SELECT COUNT(DISTINCT vu_user_id) AS SUM
+        FROM vote_item
+        WHERE vs_id = #{sid}
+    </select>
+
+    <delete id="delItemBySid" parameterType="Long">
+        DELETE
+        FROM vote_item
+        WHERE vs_id = #{sid}
+        <if test="list!=null and list.size!=0">
+            AND vo_id NOT IN
+            <foreach collection="list" item="ss" open="(" close=")" separator=",">
+                #{ss}
+            </foreach>
+        </if>
+    </delete>
+
+    <select id="getItemByUidAndSid" resultType="int">
+        SELECT count(1)
+        FROM vote_item
+        WHERE vu_user_id = #{uid}
+          AND vs_id = #{sid}
+    </select>
+
+    <insert id="addItem" parameterType="Item">
+        INSERT INTO vote_item(vu_user_id, vs_id, vo_id)
+        VALUES (#{uid}, #{sid}, #{oid});
+    </insert>
+</mapper>

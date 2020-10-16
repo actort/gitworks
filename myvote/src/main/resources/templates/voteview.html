@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<HTML>
+<HEAD>
+    <META content="IE=11.0000" http-equiv="X-UA-Compatible">
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <TITLE>投票信息</TITLE>
+    <link type="text/css" rel="stylesheet" href="css/style.css">
+    <META name="GENERATOR" content="MSHTML 11.00.10586.420">
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="js/getUser.js"></script>
+    <script type="text/javascript" src="js/getRequest.js"></script>
+    <script type="text/javascript">
+        var sids = getRequest();
+        $.getJSON("http://localhost:8080/vote/getItem", sids, function (sum) {
+            $.getJSON("http://localhost:8080/vote/getSubBySid", sids, function (data) {
+                var $div = "<H2>查看投票</H2><UL class='list'><LI><H4>"
+                    + data.title
+                    + "</H4><P class='info'>共有 "
+                    + data.listo.length
+                    + " 个选项，已有 "
+                    + sum
+                    + " 个投票。</P><OL></OL><DIV class='goback'><A href='votelist.html'>返回投票列表</A></DIV></LI></UL>"
+                $("#vote").append($div);
+                $(data.listo).each(function (i, e) {
+                    var pct = sum == 0 ? 0 : e.order / sum * 100;
+                    var $li = "<LI>"
+                        + e.option
+                        + "<DIV class='rate'><DIV class='ratebg;'><DIV class='percent' style='width: "
+                        + pct
+                        + "%;'></DIV></DIV><P>"
+                        + e.order
+                        + "票<SPAN>("
+                        + pct
+                        + ".0%)</SPAN></P></DIV></LI>";
+                    $("#vote ol").append($li);
+                });
+            });
+        });
+
+    </script>
+</HEAD>
+<BODY>
+<DIV class="wrap" id="header"><IMG src="images/logo.gif"></DIV>
+<DIV class="wrap" id="navbar">
+    <DIV class="profile">您好，<span id="username"></span> <SPAN
+            class="return"><A
+            href="votelist.html">返回列表</A></SPAN>
+        <SPAN class="addnew"><A href="add.html">添加新投票</A></SPAN>
+        <SPAN class="modify"><A href="votemodify.html">维护</A></SPAN>
+        <SPAN class="return"><A
+                href="http://localhost:8080/vote/del">注销</A></SPAN></DIV>
+    <DIV class="search">
+        <FORM action="findByName" method="post"><INPUT name="keywords" class="input-text" type="text"><INPUT
+                name="submit" class="input-button" type="submit" value=""/>
+        </FORM>
+    </DIV>
+</DIV>
+<DIV class="wrap" id="vote"></DIV>
+<DIV class="wrap" id="footer"> 北大青鸟 © 版权所有</DIV>
+</BODY>
+</HTML>

@@ -1,0 +1,58 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /vote
+
+
+spring:
+  thymeleaf:
+    encoding: utf-8
+    cache: false
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.162.133:3306/myvote?serverTimezone=GMT
+    username: root
+    password: root
+
+  mvc:
+    static-path-pattern: /**
+
+  resources:
+    static-locations: classpath:/templates/,classpath:/META-NF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,classpath:/templates/css/,classpath:/templates/js/,classpath:/templates/images,
+
+  jackson:
+    date-format: yyyy-MM-dd hh:mm:ss
+    time-zone: GMT+8
+
+  redis:
+    database: 0
+    password: 123456
+    timeout: 10s
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 5
+        min-idle: 2
+        max-wait: -1
+    cluster:
+      nodes:
+        - 192.168.162.132:7000
+        - 192.168.162.132:7001
+        - 192.168.162.132:7002
+        - 192.168.162.132:7003
+        - 192.168.162.132:7004
+        - 192.168.162.132:7005
+
+
+mybatis:
+  type-aliases-package: com.cssl.entity
+  configuration:
+    auto-mapping-behavior: full
+    use-generated-keys: true
+    map-underscore-to-camel-case: true
+
+pagehelper:
+  auto-dialect: true
+  page-size-zero: true
+  reasonable: true

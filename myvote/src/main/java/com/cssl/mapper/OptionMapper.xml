@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cssl.mapper.OptionMapper">
+
+    <resultMap id="selOptionMap" type="Option">
+        <id column="vo_id" property="oid"/>
+        <result column="vs_id" property="sid"/>
+        <result column="vo_option" property="option"/>
+        <result column="vo_order" property="order"/>
+    </resultMap>
+
+    <select id="getOptionBySid" resultMap="selOptionMap">
+        SELECT *
+        FROM vote_option
+        WHERE vs_id = #{vs_id}
+    </select>
+
+    <insert id="addOption" parameterType="Option">
+        INSERT INTO vote_option(vs_id, vo_option)
+        VALUES (#{sid}, #{option});
+    </insert>
+
+    <delete id="delOptionBySid">
+        DELETE
+        FROM vote_option
+        WHERE vs_id = #{sid}
+        <if test="list!=null and list.size!=0">
+            AND vo_id NOT IN
+            <foreach collection="list" index="" item="oid" open="(" close=")" separator=",">
+                #{oid}
+            </foreach>
+        </if>
+    </delete>
+
+    <update id="updOptionByOid" parameterType="Option">
+        UPDATE vote_option
+        SET vo_option = #{option}
+        WHERE vo_id = #{oid}
+    </update>
+
+    <update id="updOptionOrderByOid" parameterType="Long">
+        UPDATE vote_option
+        SET vo_order = vo_order + 1
+        WHERE vo_id = #{oid}
+    </update>
+</mapper>
