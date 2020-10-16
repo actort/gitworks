@@ -10,4 +10,6 @@ public class test {
     private String pwd = "************";//密码
 
     private String jurisdiction = "user";//权限
+
+    private String ss = "name";//ss
 }
