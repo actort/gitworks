@@ -12,4 +12,6 @@ public class test {
     private String jurisdiction = "user";//权限
 
     private String ss = "name";//ss
+
+    //ss
 }
